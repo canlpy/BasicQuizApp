@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+
+struct Question {
+    let text: String
+    let answers: [String]
+    let correctAnswerIndex: Int
+}
+
 struct ContentView: View {
     var body: some View {
         VStack {
