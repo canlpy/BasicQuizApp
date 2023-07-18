@@ -21,14 +21,55 @@ let questions: [Question] = [
 ]
 
 struct ContentView: View {
+    @State private var currentQuestionIndex = 0
+    @State private var score = 0
+    @State private var showAlert = false
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Text(questions[currentQuestionIndex].text)
+                .font(.largeTitle)
+                .padding()
+            
+            ForEach(0..<questions[currentQuestionIndex].answers.count) { index in
+                Button(action: {
+                    checkAnswer(index)
+                }) {
+                    Text(questions[currentQuestionIndex].answers[index])
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding(.bottom)
+            }
+            
+            Text("Score: \(score)")
+                .font(.title)
+                .padding()
         }
-        .padding()
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Quiz Completed"), message: Text("Your score is \(score)"), dismissButton: .default(Text("OK")) {
+                resetQuiz()
+            })
+        }
+    }
+    
+    func checkAnswer(_ answerIndex: Int) {
+        if answerIndex == questions[currentQuestionIndex].correctAnswerIndex {
+            score += 1
+        }
+        
+        if currentQuestionIndex + 1 < questions.count {
+            currentQuestionIndex += 1
+        } else {
+            showAlert = true
+        }
+    }
+
+    func resetQuiz() {
+        currentQuestionIndex = 0
+        score = 0
     }
 }
 
